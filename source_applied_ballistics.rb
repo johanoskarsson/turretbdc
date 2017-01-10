@@ -16,14 +16,14 @@ class SourceAppliedBallistics
     # Range (m), TOF (s), Mach, Velocity (m/s), Energy (J), Elevation (mils), Windage (mils), Drop (inches)
     ballistics = CSV.read(file, headers: :first_row)
     ballistics.each do |row|
-      # TODO flipping the elevation to be positive to make calculations easier
+      # flipping the elevation to be positive to make calculations easier
       elevation = row[COL_ELEVATION].strip.to_f
       if elevation < 0
         elevation *= -1
       end
 
       distance = row[COL_DISTANCE].strip.to_i
-      # TODO hacky, but we don't care about the crazy short distances
+      # hacky, but we don't care about the crazy short distances
       if distance > 100
         b.add(distance, row[COL_WINDAGE].strip.to_f, elevation)
       end

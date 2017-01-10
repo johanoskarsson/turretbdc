@@ -26,6 +26,9 @@ OptionParser.new do |opts|
   opts.on("-o", "--output=output", "Output pdf file") do |o|
     options[:output] = o
   end
+  opts.on("-l", "--label=label", "Any arbitrary text you want printed on the label. Useful for rifle/ammo info.") do |l|
+    options[:label] = l
+  end
   opts.on("-h", "--help", "Show this message") do
    puts opts
    exit
@@ -41,4 +44,4 @@ source = SourceAppliedBallistics.new
 ballistics = source.read(options[:input])
 
 gen = BDCGenerator.new
-gen.generate_bdc(turret, ballistics, options[:output])
+gen.generate_bdc(turret, ballistics, options[:output], options[:label])

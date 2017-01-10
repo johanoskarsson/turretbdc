@@ -3,12 +3,12 @@ require "prawn/measurement_extensions"
 
 class BDCGenerator
 
-  def generate_bdc(turret, ballistics, file)
-    margin = 10.mm
+  def generate_bdc(turret, ballistics, file, label)
+    margin = 5.mm
     page_size = [turret.circumference_mm.mm + margin * 2, turret.height_mm.mm + margin * 2]
 
     Prawn::Document.generate(file, page_size: page_size, margin: margin) do
-      bounding_box([0, margin], :width => turret.circumference_mm.mm, :height => turret.height_mm.mm) do
+      bounding_box([0, turret.height_mm.mm], :width => turret.circumference_mm.mm, :height => turret.height_mm.mm) do
         stroke_bounds
 
         ballistics.distances.each do |distance|
@@ -18,6 +18,7 @@ class BDCGenerator
           # to make it easier to spot the 100 marks, reduce all the others in size
           line_height = even_hundred ? (turret.height_mm.mm / 2) : (turret.height_mm.mm / 3)
 
+          # the vertical lines that mark the distances
           stroke { line [elevation_pos.mm, 0], [elevation_pos.mm, line_height] }
 
           # only print numbers at even 100 marks
@@ -30,9 +31,12 @@ class BDCGenerator
           text_width = width_of(distance_hundreds, :size => 10)
           text_x = elevation_pos.mm - (text_width / 2)
 
+          # the distance labels (only the hundreds)
           draw_text distance_hundreds, :size => 10, :at => [text_x, text_y]
         end
       end
+
+      draw_text label, :size => 10, :at => [0, -margin/1.5]
     end
   end
 end
